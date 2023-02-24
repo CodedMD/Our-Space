@@ -7,6 +7,13 @@ TagManager:
   - Enemy
   - Laser
   - Plane
+  - Triple_Shot_Powerup
+  - Shield_Powerup
+  - Speed_Powerup
+  - Game Over
+  - Spawn_Manager
+  - Enemy_Laser
+  - Player_Laser
   layers:
   - Default
   - TransparentFX
@@ -14,7 +21,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Post Processing
   - 
   - 
   - 
@@ -46,6 +53,9 @@ TagManager:
     locked: 0
   - name: Background
     uniqueID: 2681311255
+    locked: 0
+  - name: Midground
+    uniqueID: 3145685121
     locked: 0
   - name: Foreground
     uniqueID: 2460409149

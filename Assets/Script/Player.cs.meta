@@ -3,7 +3,11 @@ guid: c5653e36b06776b4e8247d58a263f1a2
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - _laserPrefab: {fileID: 4923808077691168033, guid: 799b915bc4436de408286b18ea7c4259, type: 3}
+  - _tripleShotPrefab: {fileID: 279972330592267150, guid: 307722d1668ae6f47894ceb1a998ddd1, type: 3}
+  - _speedupPrefab: {fileID: 3741793092021361914, guid: e61c3c90da324fb4bb6c0e763c39ddef, type: 3}
+  - _playerShield: {fileID: 465242146090129996, guid: 5331bb510956cf24aad5c6834aa6c32a, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
