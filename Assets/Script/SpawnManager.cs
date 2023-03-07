@@ -5,13 +5,11 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     [SerializeField] private GameObject _enemyContainer;
-    //[SerializeField] private GameObject _powerupContainer;
-    [SerializeField]
-    private GameObject _enemyPrefab;
+    [SerializeField] private GameObject[] powerUps;
+    [SerializeField] private GameObject _enemyPrefab;
     private bool _stopSpawning = false;
-    [SerializeField] private GameObject [] powerUps;
-    //[SerializeField] private GameObject _speedpowerUpPrefab;
-    //[SerializeField] private GameObject _shieldpowerUpPrefab;
+    
+  
 
     // Start is called before the first frame update
     void Start()
@@ -24,13 +22,16 @@ public class SpawnManager : MonoBehaviour
     {
         
     }
+
+
+
+    // Spawning Function
     public void StartSpawning()
     {
        
         StartCoroutine(SpawnRoutine());
         StartCoroutine(SpawnPowerupRoutine());
     }
-
     IEnumerator SpawnRoutine()
     { // start a loop
         yield return new WaitForSeconds(3f);
@@ -57,13 +58,15 @@ public class SpawnManager : MonoBehaviour
         {
            
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
-            int randomPowerups = Random.Range(0, 4);
+            int randomPowerups = Random.Range(0, 6);
             Instantiate(powerUps[randomPowerups], posToSpawn, Quaternion.identity);
             //newPowerUp.transform.parent = _powerupContainer.transform;
             yield return new WaitForSeconds(Random.Range(3.0f, 8.0f));
         }
     }
 
+
+    //Players Death Functions
     public void OnPlayerDeath()
     {
         _stopSpawning = true;

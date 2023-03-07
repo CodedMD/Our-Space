@@ -1,17 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 public class Laser : MonoBehaviour
 {
-    [SerializeField]
-    private float _speed = 8.0f;
+    //Speed
+    [SerializeField] private float _speed = 8.0f;
     private bool _isEnemyLaser = false;
+    private bool _isWipeOutLaser = false;
+    
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
-        
+     
     }
+
+
+
 
     // Update is called once per frame
     void Update()
@@ -20,14 +29,20 @@ public class Laser : MonoBehaviour
         {
             MoveUp();
         }
+        else if (_isWipeOutLaser == true)
+        {
+            
+            MoveUp();
+        }
         else
         {
             MoveDown();
         }
-        
-        //translate laser up
-       
+
     }
+
+
+
     void MoveUp()
     {
         transform.Translate(Vector3.up * _speed * Time.deltaTime);
@@ -43,6 +58,10 @@ public class Laser : MonoBehaviour
         }
 
     }
+
+
+
+
     void MoveDown()
     {
         transform.Translate(Vector3.down*_speed * Time.deltaTime);
@@ -58,21 +77,32 @@ public class Laser : MonoBehaviour
         }
 
     }
+
+
+
+
     public void AssignEnemyLaser()
     {
         _isEnemyLaser = true;
     }
+    public void WipeOutTime()
+    {
+        _isWipeOutLaser = true;
+    }
+
+
 
 
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player" && _isEnemyLaser == true)
         {
+            //_impulseSource = GetComponent<CinemachineImpulseSource>();
             Player player = other.GetComponent<Player>();
 
             if (player != null)
             {
-
+                
                 player.Damage();
             }
         }

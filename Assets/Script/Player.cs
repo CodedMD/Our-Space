@@ -3,44 +3,80 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.Audio;
+using Cinemachine;
+using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
-    //This describe Variables
-    //public(can be accessed in the inspector and by other object) or private reference(can not be access by outside elements)
-    //[SerializedField] gives limited access to other editor helping on a project for private Variables
-    //data type (int, float, bool, string)
-    //every variable has a name 
-    //optional value assigned
-    [SerializeField] private float _speed = 3.5f;
-    [SerializeField] private float _speedupIsActive = 4.0f;
     /// <summary>
     /// global variable are not needed for input variable
     /// </summary>(public float rightleftInput;)
+
+
+    // Lives
+    [SerializeField] private int _lives = 3;
+
+
+    //Score
+    [SerializeField] private int _score;
+  
+
+    //Speed
+    [SerializeField] private float _speed = 3.5f;
+    [SerializeField] private float _speedupIsActive = 4.0f;
+
+
+    //Ammo
+    [SerializeField] private float _fireRate = 0.5f;
+    [SerializeField] private int _maxAmmo = 15;
+    private bool _isAmmoActive = true;
+   
+    
+
+
+    //Audio - the variable for you sound - the reference to yor audio source attached to the player
+    private float _canFire = 1.0f;
+    [SerializeField] private AudioClip _laserAudio, _playerDeathAudio,_thrusterBoostAudio;
+    [SerializeField] private AudioSource _audioSource;
+    
+  
+    
+    
+    //Basic Game Objects
     [SerializeField] private GameObject _laserPrefab;
-    [SerializeField] private GameObject _tripleShotPrefab;
-    [SerializeField] private GameObject _speedupPrefab;
-    [SerializeField] private GameObject _playerShield;
     [SerializeField] private GameObject _rightEngine;
     [SerializeField] private GameObject _leftengine;
-    [SerializeField] private float _fireRate = 0.5f;
-    [SerializeField] private int _lives = 4;
-    //the variable for you sound
-    [SerializeField] private AudioClip _laserAudio,_playerDeathAudio;
-    //the reference to yor audio source attached to the player
-    [SerializeField] private AudioSource _audioSource;
-    private SpawnManager _spawnManager;
-    private float _canfire = 1.0f;
+   
     
-    //isTripleShotActive
+    //powerups
+    [SerializeField] private GameObject _wipeOutPrefab;
+    private bool _isWipeOutPowerupActive = false;
+    [SerializeField] private GameObject _tripleShotPrefab;
     private bool _isTripleShotActive = false;
+    [SerializeField] private GameObject _speedupPrefab;
     private bool _isSpeedPowerupActive = false;
+    [SerializeField] private GameObject _playerShield;
     private bool _isShieldPowerupActive = false;
-    private bool _isLifePowerupActive = false;
-  
-    [SerializeField] private int _score;
-    //[SerializeField] private TMP_Text _scoreText;
-    private UIManager _uiManager;
+    [SerializeField] private GameObject _playeHurtShield;
+    private bool _isHurtShieldActive = false;
+    [SerializeField] private int _shield = 0;
 
+
+    //Other Powerups   
+    private bool _isLifePowerupActive = false;
+   
+
+    // Thrusters
+    [SerializeField] private GameObject _thrusterBase;
+    [SerializeField] private GameObject _thrusterBoost;
+    [SerializeField] private float _thrusterBarPercentage;
+    private bool _isThrusterBoostActive = false;
+    private bool _isThrusterBaseActive = true;
+    private bool _thrusterRecover = false;
+    
+
+    //Other Scripts Hooks
+    private UIManager _uiManager;
+    private SpawnManager _spawnManager;
 
 
 
@@ -51,15 +87,39 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        ThrusterBaseActive();
+        _thrusterBarPercentage = 100;
+
+
         _audioSource = GetComponent<AudioSource>();
-        //take the current position = new position (0,0,0)
         transform.position = new Vector3(0, 0, 0);
-        //
+
+
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        //// this creates a defualt access to the player script
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        //
+
+
+
+        if(_isThrusterBoostActive == true)
+        {
+            Debug.LogError("Thruster Boost is Active on Player");
+        }
+
+        if (_isWipeOutPowerupActive == true)
+        {
+            Debug.LogError("WipeOut Power up is Active on player");
+        }
+
+        if (_isAmmoActive == false)
+        {
+            Debug.LogError("Ammo is not Active on the player");
+        }
+
+        if (_isHurtShieldActive == true)
+        {
+            Debug.LogError("_ishurtShield is Active From Start");
+        }
+
         if (_isLifePowerupActive == true)
         {
             Debug.LogError("_isLifePowerupActive is Active from Start");
@@ -91,21 +151,84 @@ public class Player : MonoBehaviour
 
 
 
-    //Debug.Log("Space Key Presed");
+  
     // Update is called once per frame
     void Update()
     {
         //this calls on the player movement void
        CalculateMovement();
-
-
-        //if I hit the space key spawn Object/ measured in frate rate/after _canfire = 1.0f
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canfire)
-         {
-            
-            LaserTime(); 
-        }
+       
         
+        if (_maxAmmo <= 0)
+        {
+            _maxAmmo = 0;
+            _isAmmoActive = false;
+            return;
+        }
+       
+       
+        
+        //if I hit the space key spawn Object/ measured in frate rate/after _canfire = 1.0f
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire)
+        {
+            LaserTime();
+           
+        }
+        if (_lives >= 3)
+        {
+            _lives = 3;
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            if (_thrusterRecover == false)
+            {
+                _audioSource.clip = _thrusterBoostAudio;
+                _audioSource.Play();
+            }
+                
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            if (_thrusterRecover == false)
+            {
+                ThrusterBoostActive();
+                _speed = 9.5f;
+            }
+             else if (_thrusterRecover == true)
+            {
+                ThrusterBaseActive();
+                _speed = 3.5f;
+            }
+            if (_thrusterBarPercentage <= 0f)
+            {
+                _thrusterBarPercentage = 0;
+                ThrusterBaseActive();
+               
+            }
+            Debug.LogError("Thruster initiated");
+            StopCoroutine(ThrusterRecoverRoutine());
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            _speed = 3.5f;
+            ThrusterBaseActive();
+          
+
+        }
+       else if (_thrusterBarPercentage <= 0)
+        {
+                _thrusterBarPercentage = 0;
+                StartCoroutine(ThrusterRecoverRoutine());
+                ThrusterBaseActive();
+            if(_thrusterBarPercentage >= 100)
+            {
+                _thrusterBarPercentage = 100;
+                StopCoroutine(ThrusterRecoverRoutine());
+            }
+        }
+       
 
 
     }
@@ -118,35 +241,14 @@ public class Player : MonoBehaviour
 
 
 
-    // This is the player movement void 
-    //CalculateMovement is a place holder and can be named anything as long as you know what is means like local variables
+    // This is the player movement
     void CalculateMovement()
     {
-        ///</movement input Summary>
-        ///local Variables inside of the update function
-        ///allow you to create variables like inputs that need to be updated on the fly via the push of a button
-        ///float starts the creation of the local variable 
-        ///updownInput or rightleftInput are references to the Input map and can be named anything
-        ///Input.GetAxis refers to the Input Axis option in Unity 
+        
         ///"Horizontal" and "Vertical" are strings/name of the Axis that we want to access will calling the input up
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-
-        ///a new local variable that incorparate the to other local variables
-        //Vector3 direction = new Vector3(rightleftInput, updownInput, 0);
-        
-
-        ///Translate Opens the access to direct an object
-        ///Vector3.right = new Vector3(1, 0, 0) move to the right
-        /// * Time.deltatime converts unity time to real life time or secs
-        ///if youu add a number like 5 between verctor3.direction and Time.deltaTime instead of 1 meter per sec it will move 5 meters per sec
-        //transform.Translate(Vector3.right * rightleftInput * _speed * Time.deltaTime);*
-        //transform.Translate(Vector3.right * speed * Time.deltaTime);
-
-        /// When input is add to this line it causes the object the scrpit is on to wait for Input
-        /// using the updownInput calls the "Vertical" Axis
-        /// using the Vecvtor3.up as a start set the movement to a nuetral point for vertical as does right for horizontal
-       //transform.Translate(Vector3.up * updownInput * _speed * Time.deltaTime);*
+    
          Vector3 direction = new Vector3(horizontalInput, verticalInput, 0 );
 
         ///this is a consolidate way to write the two transform lines above by using the Vector3 local Variable 
@@ -183,64 +285,117 @@ public class Player : MonoBehaviour
         {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
         }
-
-
-
     }
 
 
 
 
 
-
-
+    // Players Laser
     void LaserTime()
     {
-        //if I hit the space key spawn Object?
-
-        //player can fire after _canfire = 1.0f / measured by frame rate /plus _firerate = 0.5f 
-         _canfire = Time.time + _fireRate;
+       //player can fire after _canfire = 1.0f / measured by frame rate /plus _firerate = 0.5f 
+         _canFire = Time.time + _fireRate;
+        _maxAmmo--;
+        
+        
+        _uiManager.UpadateAmmo(_maxAmmo);
         
 
-        //Instantiate: spawns the object you call on/ _laserPrefab: the Object your calling on/ transform.position: player's position/
-        //Quaternion.identity: is the rotation of the object, default rotation
-        //new Vector3(0,0.8f,0): tell the laser to spawn just outside of the player
-        //Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+
         if (_isTripleShotActive == true)
         {
             
-            Instantiate(_tripleShotPrefab, transform.position + new Vector3(-.6f, 1.05f, 0), Quaternion.identity);
+            Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            _audioSource.clip = _laserAudio;
+            _audioSource.Play();
+        }
+        else if (_isWipeOutPowerupActive == true)
+        {
+            
+            Instantiate(_wipeOutPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+            _audioSource.clip = _thrusterBoostAudio;
+            _audioSource.Play();
         }
        else 
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+            _audioSource.clip = _laserAudio;
+            _audioSource.Play();
         }
-        _audioSource.clip = _laserAudio;
-        _audioSource.Play();
+       
 
     }
 
 
 
 
-
-
+    //Player Damage
     public void Damage()
     {
+        
+
         if (_isShieldPowerupActive == true)
         {
-            _isShieldPowerupActive = false;
-            _playerShield.SetActive(false);
-            return;
+
+            _shield--;
+            _uiManager.UpdateShield(_shield);
+
+
+            if (_shield == 3)
+            {
+               
+                _isShieldPowerupActive = false;
+                _isHurtShieldActive = true;
+                _playerShield.SetActive(false);
+                StartCoroutine(ShieldPowerDownRoutine());
+                //_uiManager.UpdateShield(_shield);
+                return;
+            }
+            if (_shield == 2)
+            {
+              
+                _isShieldPowerupActive = false;
+                _isHurtShieldActive = true;
+                _playerShield.SetActive(false);
+                StartCoroutine(ShieldPowerDownRoutine());
+               // _uiManager.UpdateShield(_shield);
+                return;
+            }
+            if (_shield == 1)
+            {
+                
+                _isShieldPowerupActive = false;
+                _isHurtShieldActive = true;
+                _playerShield.SetActive(false);
+                StartCoroutine(ShieldPowerDownRoutine());
+                return;
+            }
+             if (_shield <= 0)
+            {
+                
+                _playerShield.SetActive(false);
+                _isShieldPowerupActive = false;
+                
+                return;
+            }
+
+
+            
         }
+
+       
         _lives--;
 
         if (_lives == 2)
         {
+            
             _rightEngine.SetActive(true);
+            
         }
         else if (_lives == 1)
         {
+            //CameraShake._instance.CameraShakeTrigger(impulseSource);
             _leftengine.SetActive(true);
         }
 
@@ -249,26 +404,44 @@ public class Player : MonoBehaviour
 
         if (_lives < 1)
         {
-            
+            //CameraShake._instance.CameraShakeTrigger(impulseSource);
             _spawnManager.OnPlayerDeath();
             Destroy(gameObject);
            
             //_uiManager.GameOver();
         }
+    }
 
 
+    /// <summary>
+    /// PowerUp Section
+    /// </summary>
+
+
+
+    //WipeOut Powerup Shot
+    public void WipeOutPowerupActive()
+    {
+        _isWipeOutPowerupActive = true;
+        Instantiate(_wipeOutPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+        StartCoroutine(WipeOutPowerDownRoutine());
+    }
+    IEnumerator WipeOutPowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        //Instantiate(_wipeOutPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+       // yield return new WaitForSeconds(5.0f);
+        _isWipeOutPowerupActive = false;
     }
 
 
 
 
-
-
-
+    //Triple Shot 
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
-        Instantiate(_tripleShotPrefab, transform.position + new Vector3(-.6f, 1.05f, 0), Quaternion.identity);
+        Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
         StartCoroutine(TripleShotPowerDownRoutine());
     }
 
@@ -278,6 +451,10 @@ public class Player : MonoBehaviour
         _isTripleShotActive = false;
     }
 
+
+
+
+    //Speedup 
    public void SpeedupPowerupActive()
     {
         _isSpeedPowerupActive = true;
@@ -288,14 +465,44 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(5.0f);
         _isSpeedPowerupActive = false;
     }
+
+
+
+    // Shield Power
     public void ShieldPowerupActive()
     {
         _isShieldPowerupActive = true;
+        _shield = 3;
+        _uiManager.UpdateShield(_shield);
+       
         //easy way to activate and deactivate a game object in the hierarchy
         _playerShield.SetActive(true);
-       
     }
-  
+    IEnumerator ShieldPowerDownRoutine()
+    {
+        _playeHurtShield.SetActive(true);
+        yield return new WaitForSeconds(0.30f);
+        _playeHurtShield.SetActive(false);
+        _playerShield.SetActive(true);
+        _isShieldPowerupActive = true;
+    }
+
+
+
+    //Ammo Power
+    public void AmmoPowerupActive()
+    {
+        _isAmmoActive = true;
+        _maxAmmo = 15;
+        _uiManager.UpadateAmmo(_maxAmmo);
+        Debug.LogError("Ammo Power Collected");
+        
+    }
+
+
+
+
+    //Life PowerUp
     public void LifePowerupActive()
     {
         //set the life power to active
@@ -304,6 +511,15 @@ public class Player : MonoBehaviour
         _lives++;
         //update lives and sprites
         _uiManager.UpdateLives(_lives);
+        if (_lives == 3)
+        {
+            _leftengine.SetActive(false);
+            _rightEngine.SetActive(false);
+        }
+        else if(_lives == 2)
+        {
+            _leftengine.SetActive(false);
+        }
     }
     public void LifePowerupDisabled()
     {
@@ -312,8 +528,76 @@ public class Player : MonoBehaviour
        
     }
 
+    /// <summary>
+    /// Thruster Section
+    /// </summary>
 
-    //method to add 10 to the score
+
+   
+   void ThrusterBaseActive()
+    {
+        if (_isThrusterBaseActive == true)
+        {
+            _speed = 3.5f;
+            _thrusterBase.gameObject.SetActive(true);
+            _thrusterBoost.gameObject.SetActive(false);
+        }
+        
+        
+    }
+
+    void ThrusterBoostActive()
+    {
+        
+        if (Mathf.Round(_thrusterBarPercentage) > 1 || (_thrusterBarPercentage) < 100)
+        {
+            _thrusterRecover = false;
+           
+            _thrusterBase.gameObject.SetActive(true);
+           
+            _isThrusterBoostActive = true;
+           
+            _thrusterBoost.gameObject.SetActive(true);
+            
+            _thrusterBarPercentage -= 10.0f * 5 * Time.deltaTime;
+            Debug.LogError("Thruster Active");
+            
+
+        }
+        _uiManager.UpdateThrusterBoost(_thrusterBarPercentage);
+        
+    }
+    IEnumerator ThrusterRecoverRoutine()
+    {
+        while (_thrusterBarPercentage <= 100f)
+        {
+            
+            yield return new WaitForSeconds(.8f);
+            _thrusterRecover = true;
+            _thrusterBarPercentage += 500 /100 * Time.deltaTime;
+            _uiManager.UpdateThrusterBoost(_thrusterBarPercentage);
+            yield return new WaitForSeconds(.05f);
+
+            if (_thrusterBarPercentage >= 100)
+            {
+                _thrusterRecover = false;
+                _thrusterBarPercentage = 100;
+                _uiManager.UpdateThrusterBoost(_thrusterBarPercentage);
+                Debug.LogError("Thruster Recovered");
+                break;
+            }
+            
+        }
+        
+    }
+
+
+
+    /// <summary>
+    /// Points Tracker Section
+    /// </summary>
+    
+   
     public void AddScore(int points)
     {
 
@@ -322,7 +606,7 @@ public class Player : MonoBehaviour
         //
         _uiManager.UpdateScore(_score);
     }
-   
+
 
 
 

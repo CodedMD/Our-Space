@@ -8,17 +8,26 @@ public class Powerup : MonoBehaviour
     //ID for Powers 0 = trple Shot, 1 = Speed, 2 = Shield
     [SerializeField] private int powerupID;
 
+    //Speed
+    [SerializeField] private float _speed = 3.0f;
 
-    [SerializeField]
-    private float _speed = 3.0f;
+
+    //Audio
     [SerializeField] private AudioClip _powerupAudio;
    
+
+
+
+
     // Start is called before the first frame update
     void Start()
     {
 
         
     }
+
+
+
 
     // Update is called once per frame
     void Update()
@@ -34,14 +43,20 @@ public class Powerup : MonoBehaviour
         }
 
     }
+
+
+
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.tag == "Player")
         {
             //createing local variable reference called player, calling on the player script
             Player player = other.transform.GetComponent<Player>();
+            UIManager uiManager = other.transform.GetComponent<UIManager>();
 
-            
+
+
             AudioSource.PlayClipAtPoint(_powerupAudio, transform.position);
             if(_powerupAudio != null)
             {
@@ -82,9 +97,16 @@ public class Powerup : MonoBehaviour
                     case 2:
                         //_audioSource.Play();
                         player.ShieldPowerupActive();
+                        //uiManager.UpdateShield(3);
                         break;
                     case 3:
                         player.LifePowerupActive();
+                        break;
+                    case 4:
+                        player.AmmoPowerupActive();
+                        break;
+                    case 5:
+                        player.WipeOutPowerupActive();
                         break;
                     default:
                         Debug.Log("Default Value");

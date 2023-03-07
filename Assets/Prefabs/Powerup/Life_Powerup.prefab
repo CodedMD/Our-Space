@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4014391752452009765}
   - component: {fileID: 6205037361021823692}
   - component: {fileID: 3600115772002316004}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Life_Powerup
   m_TagString: Untagged
   m_Icon: {fileID: 0}

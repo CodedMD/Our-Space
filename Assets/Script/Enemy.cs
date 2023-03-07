@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Cinemachine;
 public class Enemy : MonoBehaviour
 {
     [SerializeField]
@@ -16,7 +16,7 @@ public class Enemy : MonoBehaviour
     private float _canFire;
     [SerializeField] private float _fireRate = 0.5f;
     [SerializeField] private GameObject _laserPrefab;
-
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -92,12 +92,14 @@ public class Enemy : MonoBehaviour
         if (other.tag == "Player")
         {
             other.transform.GetComponent<Player>().Damage();
+
             // StartCoroutine(AnimatedEnemyDeath());
             _deathAnim.SetTrigger("OnEnemyDeath");
             _speed = 0;
+            
             _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
-            Destroy(gameObject, 2.5f);
+            Destroy(gameObject, 1.8f);
         }
         //if other is laser destroy laser and then us 
         if (other.tag == "Player_Laser")
@@ -111,14 +113,32 @@ public class Enemy : MonoBehaviour
             //StartCoroutine(AnimatedEnemyDeath());
             _deathAnim.SetTrigger("OnEnemyDeath");
             _speed = 0;
+            Destroy(GetComponent<Laser>());
             _audioSource.Play();
             Destroy(GetComponent<Collider2D>());
-            Destroy(gameObject, 2.5f);
+            Destroy(gameObject, 1.8f);
 
         }
         if (other.tag == "Enemy_Laser")
         {
             
+
+        }
+        if (other.tag == "Wipe_Out_Laser")
+        {
+            
+            // add 10 to the score
+            if (_player != null)
+            {
+                _player.AddScore(10);
+            }
+            //StartCoroutine(AnimatedEnemyDeath());
+            _deathAnim.SetTrigger("OnEnemyDeath");
+            _speed = 0;
+            Destroy(GetComponent<Laser>());
+            _audioSource.Play();
+            Destroy(GetComponent<Collider2D>());
+            Destroy(gameObject, 1.8f);
 
         }
 
