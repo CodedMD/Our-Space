@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 1115722781456873352}
   m_Layer: 7
   m_Name: Shield_Powerup
-  m_TagString: Shield_Powerup
+  m_TagString: Power_up
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -170,3 +170,4 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

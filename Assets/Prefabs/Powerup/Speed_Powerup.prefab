@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 6236616038836633220}
   m_Layer: 7
   m_Name: Speed_Powerup
-  m_TagString: Speed_Powerup
+  m_TagString: Power_up
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -170,3 +170,4 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

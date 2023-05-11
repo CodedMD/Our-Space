@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
+
 
 public class Powerup : MonoBehaviour
 {
@@ -14,16 +14,16 @@ public class Powerup : MonoBehaviour
 
     //Audio
     [SerializeField] private AudioClip _powerupAudio;
-   
 
+    private bool _moveCloser;
 
+    private Player _player;
 
 
     // Start is called before the first frame update
     void Start()
     {
-
-        
+        _player = GameObject.Find("Player").GetComponent<Player>();
     }
 
 
@@ -32,6 +32,15 @@ public class Powerup : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
+        if (_moveCloser==true)
+        {
+            if(Vector3.Distance(_player.transform.position, transform.position) > 0)
+            {
+                transform.position += (Vector3)( _speed * Time.deltaTime * (_player.transform.position - transform.position).normalized);
+            }
+        }
+
         transform.Translate(Vector3.down * _speed * Time.deltaTime);
 
         if (transform.position.y <= -4.5f)
@@ -39,23 +48,45 @@ public class Powerup : MonoBehaviour
             //respawn at top with a new random x position
             //Instantiate(transform.position, new Vector3(0,7,0), Quaternion.identity);
             //transform.position = new Vector3(Random.Range(-8.0f, 8.0f), 7, 0);
-            Destroy(gameObject);
+            Destroy(this.gameObject);
         }
 
     }
 
 
+    public void OnEnable()
+    {
+        EventDelegator.movePowerupsTowardsPlayer += MoveCloserTopPlayer;
+        EventDelegator.dontMoveTowardsPlayer += DontMoveTowardsPlayer;
+    }
+
+    public void OnDisable()
+    {
+        EventDelegator.movePowerupsTowardsPlayer -= MoveCloserTopPlayer;
+        EventDelegator.dontMoveTowardsPlayer -= DontMoveTowardsPlayer;
+    }
+
+    public void MoveCloserTopPlayer()
+    {
+        _moveCloser = true;
+    }
+
+    public void DontMoveTowardsPlayer()
+    {
+        _moveCloser = false;
+    }
 
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+
         if (other.tag == "Player")
         {
             //createing local variable reference called player, calling on the player script
             Player player = other.transform.GetComponent<Player>();
             UIManager uiManager = other.transform.GetComponent<UIManager>();
 
-
+           // Powerup powerup = GameObject.Find("Power_up" ).GetComponentInChildren<Powerup>();
 
             AudioSource.PlayClipAtPoint(_powerupAudio, transform.position);
             if(_powerupAudio != null)
@@ -65,24 +96,6 @@ public class Powerup : MonoBehaviour
             //if player is !=not equal to null grab the player script
             if (player!= null)
             {
-                //if powerup id is 0
-                //if (powerupID == 0)
-                {
-                //    player.TripleShotActive();
-                }
-                //else if powerup is 1
-              //  else if (powerupID == 1)
-                {
-                    //play speed powerup
-               //     Debug.Log(" Play speed");
-                }
-                
-                //else if powerup is 2
-               // else if (powerupID == 2)
-                {
-                    // play shield powerup
-               //    Debug.Log(" Play Shield");
-                }
                 
                 switch (powerupID)
                 {
@@ -108,16 +121,27 @@ public class Powerup : MonoBehaviour
                     case 5:
                         player.WipeOutPowerupActive();
                         break;
+                    case 6:
+                        player.NegativePowerup();
+                        break;
+                    case 7:
+                        player.HomingFire();
+                        break;
                     default:
                         Debug.Log("Default Value");
                         break;
-
 
                 }
 
             }
             //other.transform.GetComponent<Player>().Damage();
             Destroy(gameObject);
+        }
+        if (other.tag == "Enemy_Laser")
+        {
+            Destroy(other.gameObject);
+            Destroy(gameObject);
+           
         }
     }
 }

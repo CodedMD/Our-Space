@@ -5,6 +5,7 @@ using TMPro;
 using UnityEngine.Audio;
 using Cinemachine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class Player : MonoBehaviour
 {
     /// <summary>
@@ -37,16 +38,19 @@ public class Player : MonoBehaviour
     private float _canFire = 1.0f;
     [SerializeField] private AudioClip _laserAudio, _playerDeathAudio,_thrusterBoostAudio;
     [SerializeField] private AudioSource _audioSource;
-    
-  
-    
-    
+
+
+
+
     //Basic Game Objects
+    [SerializeField] private GameObject _homingFirePrefab;
     [SerializeField] private GameObject _laserPrefab;
     [SerializeField] private GameObject _rightEngine;
     [SerializeField] private GameObject _leftengine;
-   
-    
+
+    [SerializeField] private Sprite _wipeOutShip, _baseShip;
+
+
     //powerups
     [SerializeField] private GameObject _wipeOutPrefab;
     private bool _isWipeOutPowerupActive = false;
@@ -63,33 +67,35 @@ public class Player : MonoBehaviour
 
     //Other Powerups   
     private bool _isLifePowerupActive = false;
-   
+    private bool _isNegativePowerupActive = false;
 
     // Thrusters
     [SerializeField] private GameObject _thrusterBase;
     [SerializeField] private GameObject _thrusterBoost;
     [SerializeField] private float _thrusterBarPercentage;
     private bool _isThrusterBoostActive = false;
-    private bool _isThrusterBaseActive = true;
     private bool _thrusterRecover = false;
-    
+    private bool _isThrusterBaseActive = true;
+    private bool _isHomingFireActive = false;
 
     //Other Scripts Hooks
     private UIManager _uiManager;
     private SpawnManager _spawnManager;
+    private BossIntro _bossIntro;
+    private float _distance;
+    [SerializeField] private float _distanceBetween;
 
-
-
-
+    private Enemy _enemy;
 
 
 
     // Start is called before the first frame update
     void Start()
     {
-        ThrusterBaseActive();
+        
         _thrusterBarPercentage = 100;
-
+        _maxAmmo = 15;
+        //_thrusterBarPercentage = Mathf.Clamp(_thrusterBarPercentage, 0, 100);
 
         _audioSource = GetComponent<AudioSource>();
         transform.position = new Vector3(0, 0, 0);
@@ -97,8 +103,14 @@ public class Player : MonoBehaviour
 
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-
-
+        if(_isHomingFireActive == true)
+        {
+            Debug.LogError("homing Fire null");
+        }
+        if(_isNegativePowerupActive == true)
+        {
+            Debug.LogError("Negative Powerup is Active at start on player");
+        }
 
         if(_isThrusterBoostActive == true)
         {
@@ -219,7 +231,7 @@ public class Player : MonoBehaviour
         }
        else if (_thrusterBarPercentage <= 0)
         {
-                _thrusterBarPercentage = 0;
+              
                 StartCoroutine(ThrusterRecoverRoutine());
                 ThrusterBaseActive();
             if(_thrusterBarPercentage >= 100)
@@ -228,6 +240,7 @@ public class Player : MonoBehaviour
                 StopCoroutine(ThrusterRecoverRoutine());
             }
         }
+       
        
 
 
@@ -265,9 +278,9 @@ public class Player : MonoBehaviour
 
         //if the player position on the y is greater than 0 
         //y position = 0
-        if (transform.position.y >= 0)
+        if (transform.position.y >= 1)
         {
-            transform.position = new Vector3(transform.position.x, 0, 0);
+            transform.position = new Vector3(transform.position.x, 1, 0);
         }
         else if (transform.position.y <= -3.5f)
         {
@@ -277,13 +290,13 @@ public class Player : MonoBehaviour
         //x pos = -11.3f
         //else if play on the x is less than -11.3f
         //x pos =11.3f
-        if (transform.position.x >= 11.3f)
+        if (transform.position.x >= 9.3f)
         {
-            transform.position = new Vector3(-11.3f, transform.position.y, 0);
+            transform.position = new Vector3(-9.3f, transform.position.y, 0);
         }
-        else if (transform.position.x <= -11.3f)
+        else if (transform.position.x <= -9.3f)
         {
-            transform.position = new Vector3(11.3f, transform.position.y, 0);
+            transform.position = new Vector3(9.3f, transform.position.y, 0);
         }
     }
 
@@ -317,6 +330,12 @@ public class Player : MonoBehaviour
             _audioSource.clip = _thrusterBoostAudio;
             _audioSource.Play();
         }
+        else if (_isHomingFireActive)
+        {
+            Instantiate(_homingFirePrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+            _audioSource.clip = _laserAudio;
+            _audioSource.Play();
+        }
        else 
         {
             Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
@@ -345,35 +364,29 @@ public class Player : MonoBehaviour
             if (_shield == 3)
             {
                
-                _isShieldPowerupActive = false;
-                _isHurtShieldActive = true;
-                _playerShield.SetActive(false);
+               
                 StartCoroutine(ShieldPowerDownRoutine());
-                //_uiManager.UpdateShield(_shield);
+               
                 return;
             }
             if (_shield == 2)
             {
               
-                _isShieldPowerupActive = false;
-                _isHurtShieldActive = true;
-                _playerShield.SetActive(false);
+              
                 StartCoroutine(ShieldPowerDownRoutine());
-               // _uiManager.UpdateShield(_shield);
+             
                 return;
             }
             if (_shield == 1)
             {
                 
-                _isShieldPowerupActive = false;
-                _isHurtShieldActive = true;
-                _playerShield.SetActive(false);
+              
                 StartCoroutine(ShieldPowerDownRoutine());
                 return;
             }
              if (_shield <= 0)
             {
-                
+                _shield = 0;
                 _playerShield.SetActive(false);
                 _isShieldPowerupActive = false;
                 
@@ -395,7 +408,7 @@ public class Player : MonoBehaviour
         }
         else if (_lives == 1)
         {
-            //CameraShake._instance.CameraShakeTrigger(impulseSource);
+
             _leftengine.SetActive(true);
         }
 
@@ -404,11 +417,10 @@ public class Player : MonoBehaviour
 
         if (_lives < 1)
         {
-            //CameraShake._instance.CameraShakeTrigger(impulseSource);
             _spawnManager.OnPlayerDeath();
             Destroy(gameObject);
            
-            //_uiManager.GameOver();
+          
         }
     }
 
@@ -419,19 +431,78 @@ public class Player : MonoBehaviour
 
 
 
+
+    public void NegativePowerup()
+    {
+        _isNegativePowerupActive = true;
+        if (_isNegativePowerupActive == true && _isShieldPowerupActive == true)
+        {
+            _shield--;
+            _uiManager.UpdateShield(_shield);
+            _maxAmmo = 0;
+            _uiManager.UpadateAmmo(_maxAmmo);
+           
+
+        }
+        else if (_isNegativePowerupActive == true)
+        {
+            _maxAmmo = 0;
+            _uiManager.UpadateAmmo(_maxAmmo);
+            _lives--;
+            _uiManager.UpdateLives(_lives);
+        }
+
+        if (_lives == 2)
+        {
+
+            _rightEngine.SetActive(true);
+
+        }
+        else if (_lives == 1)
+        {
+
+            _leftengine.SetActive(true);
+        }
+
+
+       
+
+        if (_lives < 1)
+        {
+            _spawnManager.OnPlayerDeath();
+            Destroy(gameObject);
+
+          
+        }
+
+
+    }
+
+
+
     //WipeOut Powerup Shot
     public void WipeOutPowerupActive()
     {
         _isWipeOutPowerupActive = true;
-        Instantiate(_wipeOutPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
-        StartCoroutine(WipeOutPowerDownRoutine());
+        if(_isWipeOutPowerupActive == true)
+        {
+           
+            _maxAmmo = 6;
+            _uiManager.UpadateAmmo(_maxAmmo);
+            StartCoroutine(WipeOutPowerDownRoutine());
+        }
+       
     }
     IEnumerator WipeOutPowerDownRoutine()
     {
+        GetComponent<SpriteRenderer>().sprite = _wipeOutShip;
+
         yield return new WaitForSeconds(5.0f);
+        
         //Instantiate(_wipeOutPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
-       // yield return new WaitForSeconds(5.0f);
+        // yield return new WaitForSeconds(5.0f);
         _isWipeOutPowerupActive = false;
+        GetComponent<SpriteRenderer>().sprite = _baseShip;
     }
 
 
@@ -441,8 +512,12 @@ public class Player : MonoBehaviour
     public void TripleShotActive()
     {
         _isTripleShotActive = true;
-        Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
-        StartCoroutine(TripleShotPowerDownRoutine());
+        if (_isTripleShotActive == true)
+        {
+            //Instantiate(_tripleShotPrefab, transform.position + new Vector3(0, 0, 0), Quaternion.identity);
+            StartCoroutine(TripleShotPowerDownRoutine());
+        }
+      
     }
 
     IEnumerator TripleShotPowerDownRoutine()
@@ -452,10 +527,34 @@ public class Player : MonoBehaviour
     }
 
 
+    // Homing Fire
+    public void HomingFire()
+    {
+        _isHomingFireActive = true;
+        if (_isHomingFireActive==true)
+        {
+            //Instantiate(_homingFirePrefab, transform.position + new Vector3(-0.88f, 2.11f, 0), Quaternion.identity);
+            //_speed = 5;
+            _maxAmmo = 15;
+            _uiManager.UpadateAmmo(_maxAmmo);
+            _audioSource.clip = _laserAudio;
+            _audioSource.Play();
+            StartCoroutine(HomingFirePowerDownRoutine());
+        }
+        
+
+    }
+
+    IEnumerator HomingFirePowerDownRoutine()
+    {
+        yield return new WaitForSeconds(5.0f);
+        _isHomingFireActive = false;
+    }
+
 
 
     //Speedup 
-   public void SpeedupPowerupActive()
+    public void SpeedupPowerupActive()
     {
         _isSpeedPowerupActive = true;
         StartCoroutine(SpeedupPowerDownRoutine());
@@ -513,6 +612,7 @@ public class Player : MonoBehaviour
         _uiManager.UpdateLives(_lives);
         if (_lives == 3)
         {
+            
             _leftengine.SetActive(false);
             _rightEngine.SetActive(false);
         }
@@ -549,11 +649,9 @@ public class Player : MonoBehaviour
     void ThrusterBoostActive()
     {
         
-        if (Mathf.Round(_thrusterBarPercentage) > 1 || (_thrusterBarPercentage) < 100)
+        if (_thrusterBarPercentage > 1 || _thrusterBarPercentage < 100)
         {
             _thrusterRecover = false;
-           
-            _thrusterBase.gameObject.SetActive(true);
            
             _isThrusterBoostActive = true;
            
@@ -605,6 +703,15 @@ public class Player : MonoBehaviour
         _score += points;
         //
         _uiManager.UpdateScore(_score);
+        GameObject enemy = GameObject.Find("Enemy");
+
+        if (_score >= 20 && this.gameObject != null)
+        {
+            Destroy(_enemy);
+            _spawnManager.SpawnBossOrg();
+
+
+        }
     }
 
 

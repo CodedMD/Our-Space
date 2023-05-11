@@ -16,6 +16,12 @@ TagManager:
   - Player_Laser
   - Shield
   - Wipe_Out_Laser
+  - Negative_Powerup
+  - Power_up
+  - Life_Powerup
+  - Undefined
+  - Dodge_Box
+  - Virtural_Camera
   layers:
   - Default
   - TransparentFX

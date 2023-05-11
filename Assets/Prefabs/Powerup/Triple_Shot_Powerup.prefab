@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 3188184548881100344}
   m_Layer: 7
   m_Name: Triple_Shot_Powerup
-  m_TagString: Untagged
+  m_TagString: Power_up
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -170,3 +170,4 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

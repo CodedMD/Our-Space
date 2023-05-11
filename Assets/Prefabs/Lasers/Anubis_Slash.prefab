@@ -1,0 +1,258 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8313487263015992816
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8313487263015992783}
+  - component: {fileID: 1682139359264489356}
+  m_Layer: 0
+  m_Name: Anubis_Slash
+  m_TagString: Enemy_Laser
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8313487263015992783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8313487263015992816}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7402004612749996641}
+  - {fileID: 7402004613321700981}
+  - {fileID: 7402004613254921416}
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!50 &1682139359264489356
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8313487263015992816}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!1001 &8313487261077014752
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8313487263015992783}
+    m_Modifications:
+    - target: {fileID: 1213830819445426993, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_FlipY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.84200007
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.99972653
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.02338527
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 2.68
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898513039488599861, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_Name
+      value: Anubis_Wave_Laser
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+--- !u!4 &7402004612749996641 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+  m_PrefabInstance: {fileID: 8313487261077014752}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8313487261646228724
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8313487263015992783}
+    m_Modifications:
+    - target: {fileID: 1213830819445426993, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_FlipY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.953717
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.30070576
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898513039488599861, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_Name
+      value: Anubis_Wave_Laser (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+--- !u!4 &7402004613321700981 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+  m_PrefabInstance: {fileID: 8313487261646228724}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8313487262115661385
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 8313487263015992783}
+    m_Modifications:
+    - target: {fileID: 1213830819445426993, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_FlipY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.953717
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.30070576
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -35
+      objectReference: {fileID: 0}
+    - target: {fileID: 8898513039488599861, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+      propertyPath: m_Name
+      value: Anubis_Wave_Laser (2)
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 0}
+  m_SourcePrefab: {fileID: 100100000, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+--- !u!4 &7402004613254921416 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1578022817591409281, guid: 7da0de9ba396e4f4eb2a1a71b2d3b81b, type: 3}
+  m_PrefabInstance: {fileID: 8313487262115661385}
+  m_PrefabAsset: {fileID: 0}

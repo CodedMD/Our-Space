@@ -20,12 +20,15 @@ public class UIManager : MonoBehaviour
     //Thruster Slider
     [SerializeField] private Slider _thrusterBar;
     [SerializeField] TMP_Text _thrusterBarPercentage;
-    
+
+    //[SerializeField] private Slider _bossHealthBar;
+ //   [SerializeField] TMP_Text _bossHealthBarPercentage;
+
 
     //GameOver GameObjects    
     [SerializeField] private GameObject _gameOverText;
     [SerializeField] private GameObject _restartLevelText;
-
+    [SerializeField] private GameObject _proveYourWorthyText;
 
     //this is a referance to a sprite/image [] = array or list
     [SerializeField] private Sprite[] _liveSprites = new Sprite[4];
@@ -47,12 +50,13 @@ public class UIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //_thrusterBar.value = 100;
-        //_liveSprites[CurrentPlayer = 3];
+        
         _scoreText.text = "Score:" + 0;
+        
         _shieldImages.gameObject.SetActive(false);
         //the .gameobject causes unity to reconize the text variables as gameobjects
         _gameOverText.gameObject.SetActive(false);
+        _proveYourWorthyText.gameObject.SetActive(false);
         _gameManager = GameObject.Find("Game Manager").GetComponent<GameManager>();
         _maxLives = GameObject.Find("Player").GetComponent<Player>();
         
@@ -71,12 +75,15 @@ public class UIManager : MonoBehaviour
     //Update Sscore 
     public void UpdateScore(int playerScore)
     {
+        GameObject enemy = GameObject.Find("Enemy");
         _scoreText.text = "Score:" + playerScore;
-        if(playerScore == 1000)
+        if(playerScore == 500)
         {
-            SceneManager.LoadScene(0);
+            Destroy(enemy);
+            
+            StartCoroutine(ProveItToTheBoss());
         }
-        
+       
        
     }
 
@@ -98,7 +105,8 @@ public class UIManager : MonoBehaviour
     {
         _shieldImages.gameObject.SetActive(true);
         _shieldImages.sprite = _shieldSprite[currentShield];
-
+        if (currentShield == 0)
+            _shieldImages.gameObject.SetActive(false);
     }
 
 
@@ -134,8 +142,9 @@ public class UIManager : MonoBehaviour
             
 
 
-        if (currentLives == 0)
+        if (currentLives <= 0)
         {
+            currentLives = 0;
             _gameManager.GameOver();
             //_gameOverText.gameObject.SetActive(true);
             StartCoroutine(GameOverFlickerRoutine());
@@ -147,10 +156,22 @@ public class UIManager : MonoBehaviour
     
     }
 
+
     /// <summary>
     /// End of Level Text
     /// </summary>
     /// <returns></returns>
+    /// 
+    IEnumerator ProveItToTheBoss()
+    {
+        yield return new WaitForSeconds(3f);
+       
+    
+            _proveYourWorthyText.gameObject.SetActive(true);
+            yield return new WaitForSeconds(3f);
+            _proveYourWorthyText.gameObject.SetActive(false);
+       
+    }
 
     IEnumerator GameOverFlickerRoutine()
     {
